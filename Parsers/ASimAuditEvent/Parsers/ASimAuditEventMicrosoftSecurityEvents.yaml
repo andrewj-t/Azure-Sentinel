@@ -121,13 +121,11 @@ ParserQuery: |
           // Parse Scheduled Task
           let ScheduledTask = ParsedEvents
               | where EventID in(ScheduledTaskEventIds)
-              | extend 
+              | extend
                   Object = TaskName,
-                  NewValue = replace_strings(coalesce(
-                  TaskContent,
-                  TaskContentNew
-              ), dynamic(["&lt;", "&gt;", "&amp;"]), dynamic(["<", ">", "&"]))
-              | extend 
+                  OldValue = replace_strings(TaskContent, dynamic(["&lt;", "&gt;", "&amp;"]), dynamic(["<", ">", "&"])),
+                  NewValue = replace_strings(TaskContentNew, dynamic(["&lt;", "&gt;", "&amp;"]), dynamic(["<", ">", "&"]))
+              | extend
                   Value = NewValue
               | project-away Task*, *DRA, SourceAddr, ObjectDN, AttributeValue
           ;
